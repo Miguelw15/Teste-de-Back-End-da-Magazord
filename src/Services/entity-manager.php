@@ -1,14 +1,13 @@
 <?php
 
-require_once 'vendor/autoload.php';
-
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\DBAL\DriverManager;
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../','.env');
+$dotenv->load();
 $isDevMode = true;
-$paths = ["/src/models"];
+$paths = ["src/Entity"];
 
 $dbParams = [
     'driver'    =>  $_ENV['DB_DRIVER'],
@@ -20,5 +19,5 @@ $dbParams = [
 $config = ORMSetup::createAttributeMetadataConfiguration($paths,$isDevMode);
 $conn = DriverManager::getConnection($dbParams,$config);
 
-$entityManager = new EntityManager($con,$config);
+return $entityManager = new EntityManager($conn,$config);
 
