@@ -1,4 +1,4 @@
-# Teste-de-Back-End-da-Magazord - v0.0.0
+# Teste-de-Back-End-da-Magazord - v0.1.0
 
 Teste para seleção, aplicada pela Magazord.
 Uma aplicação criada com base em PHP que realiza cadastro
