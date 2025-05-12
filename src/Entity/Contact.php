@@ -21,9 +21,6 @@ class Contact
     #[Mapping\Column(type: Types::STRING, unique: true)]
     private string $content;
 
-    #[Mapping\Column(type: Types::TEXT)]
-    private ?string $description = null;
-
     #[Mapping\ManyToOne(targetEntity: Person::class, inversedBy:'contacts')]
     private ?Person $person = null;
 
@@ -48,7 +45,7 @@ class Contact
         }
         elseif ($type === 'phone'){
             if(!preg_match('/^\(\d{2}\)\s\d{5}-\d{4}$/',$content)){
-                throw new Exception('Invalid email! ');
+                throw new Exception('Invalid phone! ');
             }
         }
         else {
@@ -58,7 +55,7 @@ class Contact
         return true;
         
     }
-
+    
     public function setPerson(?Person $person): void
     {
         $this->person = $person;
@@ -73,16 +70,15 @@ class Contact
     {
         return $this->id;
     }
-
-    public function setDescription(string $description): void
+    public function getType():string
     {
-        $this->description = $description;
+        return $this->type;
     }
-
-    public function getDescription(): string
+    
+    public function getContent(): string
     {
-        return $this->description;
+        return $this->content;
     }
-
+    
 
 }

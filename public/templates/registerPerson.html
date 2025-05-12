@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/register.css">
+    <script src="../scripts/registerPerson.js" defer></script>
+    <title>Magazord Back-End Test</title>
+</head>
+<body>
+    
+    <div class="register-container">
+        <h1>Register Person</h1>
+        <form class='register-form' action="">
+            <div class="register-info-container" id="register-name-container">
+                <label id="name-label" for="name">Name</label>
+                <input id="name-input" type="text" name="name" placeholder="Name Surname">
+            </div>
+            <div class="register-info-container" id="register-cpf-container">
+                <label id="cpf-label" for="cpf">CPF</label>
+                <input id="cpf-input" type="text" name="cpf" placeholder="XXX.XXX.XXX-XX"> 
+            </div>
+            <div class="register-info-container">
+                <label id="gender-label" for="sexo">Gender</label>
+                <select id="gender" name="sexo">
+                    <option value="">Select</option>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                    <option value="O">Other</option>
+                </select>
+            </div>
+
+            
+            
+        </form>
+        <div class="register-buttons-container">
+            <input id="register-confirm" class="register-submit" type="submit" value="Register">
+            <input id="register-cancel" class="register-submit" type="submit" value="Cancel" placeholder="Cancel"> 
+        </div>
+    </div>
+    
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+html, *{
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-container {
+    padding: 30px;
+    background-color: rgba(136, 130, 130, 0.192);
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+}
+
+.register-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.register-submit{
+    width: 60px;
+    height: 30px;
+    
+}
+.register-buttons-container{
+    display: flex;
+    gap: 15px;
+}
+.register-form{
+    display: flex;
+    align-items: center;
+
+}
+.register-info-container{
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+.register-info-container input{
+    height: 30px;
+    font-size: 14px;
+    border: 1px solid black;
+    border-style: inset;
+}
+.register-info-container select {
+    height: 30px;
+    border: 1px solid black;
+    border-style: inset;
+}

@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../styles/register.css">
+    <script src="../scripts/registerContact.js" defer></script>
+    <title>Magazord Back-End Test</title>
+</head>
+<body>
+   <div class="register-container">
+        <h1>Register Contact</h1>
+        <form class='register-form' action="">
+            <div class="register-info-container" id="register-type-container">
+                <label id="type-label" for="type">Type</label>
+                <select id="type-input" name="Type">
+                  <option value="">Select</option>
+                  <option value="Email">Email</option>
+                  <option value="Phone">Phone</option>
+                </select>
+            </div>
+            <div class="register-info-container" id="register-contact-container">
+                <label id="contact-label" for="contact">Contact</label>
+                <input id="contact-input" type="text" name="contact" placeholder="Select the type" readonly> 
+            </div>
+            <div class="register-info-container">
+                <label for="person">Person (optional)</label>
+                <input type="text" id="person-search" name="person" list="person-datalist" placeholder="Searcth Person">
+                <datalist id="person-datalist" name="person">
+                    <option value=""></option>
+                    
+                </datalist>
+            </div>
+            
+        </form>
+        <div class="register-buttons-container">
+            <input id="register-confirm" class="register-submit" type="submit" value="Register">
+            <input id="register-cancel" class="register-submit" type="submit" value="Cancel" placeholder="Cancel"> 
+        </div>
+    </div>
+</body>
+</html>

@@ -23,16 +23,21 @@ class Person
     #[Mapping\Column(type:Types::STRING, unique:true)]
     private string $cpf;
 
+    #[Mapping\Column(type:Types::STRING)]
+    private $gender;
+
+    
     /** @var Collection<int,Contact> */
     #[Mapping\OneToMany(targetEntity: Contact::class,mappedBy:'person',cascade:['persist','remove'])]
     private Collection $contacts;
 
-    public function __construct($name,$cpf)
+    public function __construct($name,$cpf,$gender)
     {
         try{
-            if ($this->authenticate($name,$cpf)){
+            if ($this->authenticate($name,$cpf,$gender)){
                 $this->name = $name;
                 $this->cpf = $cpf;
+                $this->gender = $gender;
                 $this->contacts = new ArrayCollection();
             };
         } catch (Exception $e) {
@@ -40,7 +45,7 @@ class Person
         }
     }
         
-    private function authenticate($name,$cpf): bool
+    private function authenticate($name,$cpf,$gender): bool
     {
         if (!preg_match('/^[a-zA-ZÀ-Öà-ö]{2,100}\s[a-zA-ZÀ-Öà-ö]{2,100}$/',$name)){
             throw new Exception('Invalid name!');
@@ -48,6 +53,10 @@ class Person
         if (!preg_match('/^\d{3}\.\d{3}\.\d{3}-\d{2}$/', $cpf)){
             throw new Exception('Invalid cpf! Use this format: XXX.XXX.XXX-XX.');
         }
+        if (!in_array($gender, ['Male','Female','Other'])) {
+            throw new \InvalidArgumentException("Gênero inválido: $gender");
+        }
+        
         return true;
     }
 
@@ -81,5 +90,13 @@ class Person
     public function getCPF(): string
     {
         return $this->cpf;
+    }
+    public function getContacts(): array|Collection
+    {
+        return $this->contacts;
+    }
+    public function getGender(): string
+    {
+        return $this->gender;
     }
 }
