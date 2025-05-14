@@ -6,9 +6,4 @@ e consultas de Pessoas e Contatos que estão relacionados a elas.
 
 ## O que há de novo nesta atualização?
 
-- Entidades melhoradas;
-- Controladores com funções melhoradas;
-- Arquitetura melhorada;
-- Criado tabela e APIs para requisições com Back-End;
-- Adicionado estilos e DOM para gerenciamento de contéudo.
-- Páginas de cadastro incompletas.
+- APIs um pouco melhoradas.
