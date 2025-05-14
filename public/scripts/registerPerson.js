@@ -1,16 +1,18 @@
 const CancelButton = document.getElementById('register-cancel');
-const RegisterContact = document.getElementById('register-confirm');
+const RegisterPerson = document.getElementById('register-confirm');
 
 const nameLabel = document.getElementById('name-label');
 const nameInput = document.getElementById('name-input');
+let validName = false;
 
 const cpfLabel = document.getElementById('cpf-label');
 const cpfInput = document.getElementById('cpf-input');
+let validCPF = false;
 
 const genderLabel = document.getElementById('gender-label');
 const genderInput = document.getElementById('gender-input');
+let validGender = false;
 
-// Cancelar e voltar para a página inicial
 CancelButton.addEventListener('click', () => {
     window.location.href = '../index.html';
 });
@@ -19,9 +21,11 @@ CancelButton.addEventListener('click', () => {
 nameInput.addEventListener('blur', () => {
     const nameRegex = /^[a-zA-ZÀ-Öà-ö]{2,100}\s[a-zA-ZÀ-Öà-ö]{2,100}$/;
     if (!nameRegex.test(nameInput.value) && nameInput.value !== "") {
+        validName = false
         nameInput.style.border = '1px solid red';
         nameLabel.innerHTML = 'Name (Invalid Format!)';
     } else {
+        validName = true
         nameInput.style.border = '1px solid black';
         nameLabel.innerHTML = 'Name';
     }
@@ -34,11 +38,13 @@ nameInput.addEventListener('focus', () => {
 
 // ==== CPF VALIDATION ====
 cpfInput.addEventListener('blur', () => {
-    const cpfRegex = /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/; // Ex: 123.456.789-00
+    const cpfRegex = /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/; 
     if (!cpfRegex.test(cpfInput.value) && cpfInput.value !== "") {
+        validCPF = false;
         cpfInput.style.border = '1px solid red';
         cpfLabel.innerHTML = 'CPF (Invalid Format!)';
     } else {
+        validCPF = true;
         cpfInput.style.border = '1px solid black';
         cpfLabel.innerHTML = 'CPF';
     }
@@ -49,13 +55,13 @@ cpfInput.addEventListener('focus', () => {
     cpfInput.style.border = '1px solid black';
 });
 
-// ==== GENDER VALIDATION ====
 genderInput.addEventListener('blur', () => {
-    const genderRegex = /^(Masculino|Feminino)$/i;
+    const genderRegex = /^(Male|Female|Other)$/i;
     if (!genderRegex.test(genderInput.value) && genderInput.value !== "") {
+        validGender = false;
         genderInput.style.border = '1px solid red';
-        genderLabel.innerHTML = 'Gender (Invalid: Use "Masculino" or "Feminino")';
     } else {
+        validGender = true;
         genderInput.style.border = '1px solid black';
         genderLabel.innerHTML = 'Gender';
     }
@@ -64,4 +70,27 @@ genderInput.addEventListener('blur', () => {
 genderInput.addEventListener('focus', () => {
     genderLabel.innerHTML = 'Gender';
     genderInput.style.border = '1px solid black';
+});
+
+RegisterPerson.addEventListener('click',(event)=>{
+    event.preventDefault();
+    if (validCPF&&validGender&&validName){
+        console.log(nameInput.value,cpfInput.value,genderInput.value)
+        fetch('/scripts/apis/registerPerson.php',{
+            method: "POST",
+            headers: {
+                'Content-Type':'application/json'
+            },
+            body: JSON.stringify({
+                name: nameInput.value,
+                cpf: cpfInput.value,
+                gender: genderInput.value,
+            })
+        })
+        .then(response=>{return response.json()})
+        .then(data=>{
+            console.log(data.message);
+            window.location.href= "/../index";
+        })
+    }
 });

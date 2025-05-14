@@ -1,25 +1,30 @@
 
-const personbody = document.querySelector('#person-table tbody');
-const contactbody = document.querySelector('#contact-table tbody');
-const addContact = document.getElementById('add-contact');
-const addPerson = document.getElementById('add-person');
+const personbody = document.querySelector('.person-table tbody');
+const contactbody = document.querySelector('.contact-table tbody');
+const addContact = document.querySelector('.add-contact');
+const addPerson = document.querySelector('.add-person');
 let maxRows = document.getElementById('lines');
 
-function ucfirst(str) {
-    if (str.length === 0) return str; // Evita erro se a string estiver vazia
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
 function renderEditView()
 {
-const editView = document.querySelectorAll('.edit-view');
-editView.forEach(button=>{
+    const editView = document.querySelectorAll('.edit-delete .edit');
+    const remove = document.querySelectorAll('.edit-delete .delete');
 
-    button.addEventListener('click',()=>{
-        const data = button.dataset.id;
-        console.log(data);
+    editView.forEach(button=>{
+        button.addEventListener('click',()=>{
+            const data = button.closest('article').dataset;
+            window.location.href = `../templates/editView.html?id${data.id}&name=${encodeURIComponent(data.name)}&cpf=${data.cpf}`
+        })
     })
-})
+
+    remove.forEach(button=>{
+        button.addEventListener('click',()=>{
+            
+        })
+    })
 }
+
+
 function createContactColumns(){
     contactbody.innerHTML = '';
     let lastColor = 'gray';
@@ -31,19 +36,18 @@ function createContactColumns(){
             const data = contacts[i];
             row.innerHTML = `
                 <td>${data.id}</td>
-                <td>${ucfirst(data.type)}</td>
-                <td>${data.content}</td>
+                <td>${data.type}</td>
+                <td>${data.contact}</td>
                 <td>
                 <article data-id="${data.id}" data-type="${data.type}"
-                data-content="${data.content}" class="edit-view"
-                style="display: flex; align-items:center; 
-                justify-content: center;">
-                <img src="assets/Edit.svg" style="width:30px;height:30px"></img>
+                data-contact="${data.contact}" class="edit-delete">
+                    <img class="edit" src="assets/Edit.svg"></img>
+                    <img class="delete" src="assets/Delete.svg"></img>
                 </article>
                 </td>
             `;
         } else {
-            for (let j = 0; j < document.querySelectorAll('#contact-table thead tr th').length; j++) {
+            for (let j = 0; j < document.querySelectorAll('.contact-table thead tr th').length; j++) {
                 const column = document.createElement('td');
                 row.appendChild(column);
             }
@@ -70,15 +74,16 @@ function createPersonColumns(){
                 <td>${data.cpf}</td>
                 <td>${data.gender}</td>
                 <td style="text-align: center">
-                <article class="edit-view" 
-                data-id="${data.id}" data-name="${data.name}"
-                data-cpf=${data.cpf}>
-                    <img style="width: 30px; height: 30px;" src="assets/Edit.svg"></img>
+                <article class="edit-delete" 
+                data-id="${data.id}" data-name="${data.name}" data-cpf=${data.cpf}>
+                <img class="edit" src="assets/Edit.svg"></img>
+                <img class="delete" src="assets/Delete.svg"></img>
+                </article>
                 </article>
                 </td>
             `;
         } else {
-            for (let j = 0; j < document.querySelectorAll('#person-table thead tr th').length; j++) {
+            for (let j = 0; j < document.querySelectorAll('.person-table thead tr th').length; j++) {
                 const column = document.createElement('td');
                 row.appendChild(column);
             }

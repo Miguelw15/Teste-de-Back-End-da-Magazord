@@ -11,7 +11,7 @@
     
     <div class="register-container">
         <h1>Register Person</h1>
-        <form class='register-form' action="">
+        <form class='register-form'>
             <div class="register-info-container" id="register-name-container">
                 <label id="name-label" for="name">Name</label>
                 <input id="name-input" type="text" name="name" placeholder="Name Surname">
@@ -22,16 +22,13 @@
             </div>
             <div class="register-info-container">
                 <label id="gender-label" for="sexo">Gender</label>
-                <select id="gender" name="sexo">
+                <select id="gender-input" name="sexo">
                     <option value="">Select</option>
-                    <option value="M">Male</option>
-                    <option value="F">Female</option>
-                    <option value="O">Other</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
                 </select>
             </div>
-
-            
-            
         </form>
         <div class="register-buttons-container">
             <input id="register-confirm" class="register-submit" type="submit" value="Register">

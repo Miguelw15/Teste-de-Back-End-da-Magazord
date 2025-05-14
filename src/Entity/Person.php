@@ -28,7 +28,7 @@ class Person
 
     
     /** @var Collection<int,Contact> */
-    #[Mapping\OneToMany(targetEntity: Contact::class,mappedBy:'person',cascade:['persist','remove'])]
+    #[Mapping\OneToMany(targetEntity: Contact::class,mappedBy:'person')]
     private Collection $contacts;
 
     public function __construct($name,$cpf,$gender)
@@ -41,13 +41,13 @@ class Person
                 $this->contacts = new ArrayCollection();
             };
         } catch (Exception $e) {
-            echo 'Não é válido! Erro: ' . $e->getMessage();
+            echo 'Erro: ' . $e->getMessage();
         }
     }
         
     private function authenticate($name,$cpf,$gender): bool
     {
-        if (!preg_match('/^[a-zA-ZÀ-Öà-ö]{2,100}\s[a-zA-ZÀ-Öà-ö]{2,100}$/',$name)){
+        if (!preg_match('/^[a-zA-ZÀ-ÖØ-öø-ÿ]{2,100}(?:\s[a-zA-ZÀ-ÖØ-öø-ÿ]{2,100})?$/',$name)){
             throw new Exception('Invalid name!');
         }
         if (!preg_match('/^\d{3}\.\d{3}\.\d{3}-\d{2}$/', $cpf)){
@@ -56,7 +56,6 @@ class Person
         if (!in_array($gender, ['Male','Female','Other'])) {
             throw new \InvalidArgumentException("Gênero inválido: $gender");
         }
-        
         return true;
     }
 

@@ -1,10 +1,10 @@
 <?php 
-
 namespace App\Controller;
+require_once __DIR__.'/../../vendor/autoload.php';
 
 use App\Entity\Person;
-
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 
 class PersonController
 {   
@@ -16,14 +16,23 @@ class PersonController
         $this->entityManager = $entityManager;
         $this->PersonRepository = $this->entityManager->getRepository(Person::class); 
     }
-    public function createPerson($name,$cpf,$gender)
+    public function createPerson($name,$cpf,$gender): ?Person
     {
-        $newPerson = new Person($name,$cpf,$gender);
-        $this->entityManager->persist($newPerson);
-        $this->entityManager->flush();
-
+        try {
+            $newPerson = new Person($name,$cpf,$gender);
+            $this->entityManager->persist($newPerson);
+            $this->entityManager->flush();
+            return $newPerson;
+        }
+        catch (Exception $e)
+        {
+            echo 'Error: ' . $e->getMessage();
+            return null;
+        }
+        
     }
-    public function getAllPersons():    array
+
+    public function getAllPersons(): array
     {
         $personArray = [];
         foreach($this->PersonRepository->findAll() as $person){
@@ -35,10 +44,25 @@ class PersonController
                 'contacts'=>$person->getContacts()
             ];
         };
-
         return $personArray;    
     }
-    public function getPerson($name) {
+    public function getPerson($name,$cpf): ?Person
+    {
+        try {
+            $caughtPerson = $this->PersonRepository->findOneBy([
+                'cpf'=> $cpf
+            ]);
+            
+            return $caughtPerson;
+        }
+        catch(Exception $e)
+        {
+            echo "Error: " . $e->getMessage();
+            return null;
+        }
+    }
+    public function getPersons($name,) 
+    {
         $personArray = [];
 
         $query = $this->entityManager->createQuery(
@@ -47,27 +71,42 @@ class PersonController
 
         $results = $query->getResult();
 
-       foreach ($results as $person) {
-        
-        $contactsArray = [];
-        foreach ($person->getContacts() as $contact) {
-            $contactsArray[] = [
-                'id' => $contact->getId(),
-                'type' => $contact->getType(),
-                'content' => $contact->getContent()
+       foreach ($results as $person) 
+       {
+            $contactsArray = [];
+            foreach ($person->getContacts() as $contact) 
+            {
+                $contactsArray[] = [
+                    'id' => $contact->getId(),
+                    'type' => $contact->getType(),
+                    'content' => $contact->getContent()
+                ];
+            }
+
+            $personArray[] = 
+            [
+                'id' => $person->getId(),
+                'name' => $person->getName(),
+                'cpf' => $person->getCPF(),
+                'gender' => $person->getGender(),
+                'contacts' => $contactsArray 
             ];
+            return $personArray; 
+        }
+    }
+    public function hasPerson($name, $cpf): bool
+    {   
+        try {
+            $hasP = $this->PersonRepository->findOneBy([
+                'name' => $name,
+                'cpf' => $cpf,
+            ]);
+            return true;
+        } catch (Exception $e) {
+            echo "Erro: " . $e->getMessage();
+            return false;
         }
 
-        $personArray[] = [
-            'id' => $person->getId(),
-            'name' => $person->getName(),
-            'cpf' => $person->getCPF(),
-            'gender' => $person->getGender(),
-            'contacts' => $contactsArray // Agora contatos são um array com os dados necessários
-        ];
     }
-
-        return $personArray;
-}
 
 }
