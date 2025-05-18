@@ -1,18 +1,3 @@
-<?php
-use App\Services\EntityManagerFactory;
-require_once __DIR__.'/../vendor/autoload.php';
-$entityManager = EntityManagerFactory::create();
-
-use App\Controller\ContactController;
-use App\Controller\PersonController;
-
-$ContactManager = new ContactController($entityManager);
-$PersonManager = new PersonController($entityManager);
-
-$contactList = $ContactManager->getAllContacts();
-$personList = $PersonManager->getAllPersons();
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,29 +5,47 @@ $personList = $PersonManager->getAllPersons();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/table.css">
     <script src="scripts/table.js" defer></script>
+    <link rel="stylesheet" href="styles/fonts.css">
     <title>Magazord Back-End Test</title>
 </head>
 
 <body>
-    <script>
-        contacts = <?= json_encode($contactList,JSON_UNESCAPED_UNICODE)?>;
-        persons = <?= json_encode($personList,JSON_UNESCAPED_UNICODE)?>;
-    </script>
+
+    <div id="delete-confirm-overlay">
+        <div id="delete-confirm-modal">
+            <h2>Are you sure you want to delete the contact?</h2>
+            <div class="confirm-cancel-button-container"> 
+                <button id="confirm-delete" class="confirm-cancel-button">Confirm</button>
+                <button id="cancel-delete" class="confirm-cancel-button">Cancel</button>
+            </div>
+            
+        </div>
+    </div>
+        
     <div class="tables">
+        
         <div class="table-manager person-container">
             
             <div class="header-table">
                 <div class="left-content">
                     <h2>Person</h2>
-                    <div class="edit-button add-person">
+                    <div id="add-person" class="edit-button">
                         <img src="assets/Add.svg" alt="Add Person">
                     </div>
                 </div>
-
-                <div class="search-persons">
-                    <input type="text">
-                    <input type="submit" value="Search">
+                <div class="select-lines-container">
+                    <label for="lines-person">Rows</label>
+                    <select id="lines-person" name="lines-person">
+                        <option value="5">5</option>
+                        <option value="15">15</option>
+                        <option value="30">30</option>
+                    </select>  
                 </div>
+                <div id="search-persons">
+                    <input id="search-persons-input" type="text">
+                    <input id="search-persons-submit" type="submit" value="Search">
+                </div>
+                
             </div>
 
             <table class="person-table">
@@ -57,28 +60,27 @@ $personList = $PersonManager->getAllPersons();
                 </thead>
                 <tbody></tbody>
             </table>
-
-            <div class="select-lines-container">
-            <label for="lines">Rows</label>
-                <select id="lines" name="lines">
-                    <option value="5">5</option>
-                    <option value="15">15</option>
-                    <option value="30">30</option>
-                </select>  
-            </div>
         </div>
 
     <div class="table-manager contact-container">
         <div class="header-table">
             <div class="left-content">
                 <h2>Contacts</h2>
-                <div class="edit-button add-contact">
+                <div id="add-contact" class="edit-button">
                     <img src="assets/Add.svg" alt="Add Contact">
                 </div>
             </div>
-            <div class="search-contacts">
-                <input type="text">
-                <input type="submit" value="Search">
+            <div class="select-lines-container">
+                    <label for="lines-contact">Rows</label>
+                    <select id="lines-contact" name="lines-contact">
+                        <option value="5">5</option>
+                        <option value="15">15</option>
+                        <option value="30">30</option>
+                    </select>  
+                </div>
+            <div id="search-contacts">
+                <input id="search-contacts-input" type="text">
+                <input id="search-contacts-submit" type="submit" value="Search">
             </div>
         </div>
 
@@ -88,6 +90,7 @@ $personList = $PersonManager->getAllPersons();
                     <th class="contact-id-column">Id</th>
                     <th class="contact-type-column">Type</th>
                     <th class="contact-content-column">Contact</th>
+                    <th class="contact-person-column">Person</th>
                     <th class="contact-edit_delete-column">Edit/Delete</th>
                 </tr>
             </thead>

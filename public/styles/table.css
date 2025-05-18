@@ -12,6 +12,7 @@ body {
     display: flex;
     gap: 60px;
     justify-content: center;
+    margin-bottom: 60px;
 }
 
 thead {
@@ -24,6 +25,7 @@ tr{
 }
 
 th, td{
+
     justify-items: center;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -32,12 +34,13 @@ th, td{
     text-align: center;
 }
 th{
+    font-weight: bold;
     background-color: #D9D9D9;
 }
 
 table {
     border-collapse: collapse;
-    width: 600px;
+    width: 650px;
     justify-content: center;
     table-layout: fixed;
 }
@@ -78,9 +81,7 @@ img{
     width: max-content;
 }
 
-.select-lines-container{
-    margin-top: 15px;
-    margin-bottom: 120px;
+.select-lines-container{    
     display: flex;
     gap: 5px;
 }
@@ -94,26 +95,59 @@ img{
     height: 30px;
 }
 
+#delete-confirm-overlay {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.199);
+    z-index: 100;
+}
+
+#delete-confirm-modal {
+    text-align: center;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: baseline;
+    border: 1px solid black;
+    width: 350px;
+    height: 200px;
+    background-color: white;
+    gap: 30px;
+}
+
+.confirm-cancel-button-container {
+    display: flex;
+    gap: 30px;
+}
+
+.confirm-cancel-button{
+    width: 60px;
+    height: 30px;
+}
+
 .person-id-column{width: 50px;}
-.person-name-column{width: 100px;}
-.person-cpf-column{width: 100px;}
-.person-gender-column{width: 50px;}
-.person-edit_delete-column{width: 70px;}
+.person-gender-column{width: 80px;}
+.person-edit_delete-column{width: 100px;}
 .contact-id-column{width: 50px;}
-.contact-edit_delete-column{width: 70px;}
-.contact-type-column{width: 100px;}
+.contact-edit_delete-column{width: 74px;}
+.contact-type-column{width: 50px;}
 .contact-content-column{width: 150px;}
+.contact-person-column{width: 150px;}
 
 @media screen and (max-width: 970px){
     .tables {
         display: flex;
         flex-direction: column;
+        align-items: center;
     }
     .select-lines-container{
-        margin-top: 15px;
-        margin-bottom: 120px;
-        display: flex;
-        gap: 5px;
         justify-content: center;
         align-items: center;
 }

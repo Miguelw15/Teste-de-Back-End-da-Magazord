@@ -38,18 +38,72 @@ class ContactController
         return $contactsArray;
         
     }
+    
+    public function getContacts($search): array|null 
+    {   
+        $contactsArray = [];
+        $query = $this->entityManager->createQuery(
+            'SELECT c FROM App\Entity\Contact c WHERE LOWER(c.contact) LIKE LOWER(:contact)'        
+            )->setParameter('contact','%'.$search.'%');
+
+        $results = $query->getResult();
+        if (!empty($results)) {
+            foreach ($results as $result) {
+                $person = $result->getPerson();
+                $contactsArray[] = [
+                    'id' => $result->getId(),
+                    'type' => $result->getType(),
+                    'contact' => $result->getContact(),
+                    'person' => $person ? [
+                        'id' => $person->getId(),
+                        'name' => $person->getName(),
+                        'cpf' => $person->getCPF(),
+                        'gender' => $person->getGender(),
+                    ] : null,
+                ];
+            }
+            return $contactsArray;
+        } else {
+            return null;
+        }
+    }
     public function createContact($type,$contact): ?Contact
     {
         try {
             $newContact = new Contact($type,$contact);
-            $this->entityManager->persist($newContact);
-            $this->entityManager->flush();
             return $newContact;
         }
         catch(Exception $e)
         {
-            echo "Error: ". $e->getMessage();
             return null;
+        }
+    }
+    public function hasContact($type,$contact):bool|null
+    {
+        try {
+            
+            $hasContact = $this->ContactsRepository->findOneBy([
+                'type'=>$type,
+                'contact'=>$contact,
+            ]);
+            return $hasContact ? true : false;
+        }
+        catch (Exception $e)
+        {
+           
+            return null;
+        }
+    }
+    public function deleteContact($id){
+        try {
+            $contact = $this->ContactsRepository->findOneBy([
+                'id' => $id,
+            ]);
+            $this->entityManager->remove($contact);
+            $this->entityManager->flush();
+        }
+        catch (Exception $e){
+            echo 'Error: '. $e;
         }
     }
 }

@@ -8,7 +8,7 @@ let validType = false;
 const contactLabel = document.getElementById('contact-label');
 const contactInput = document.getElementById('contact-input');
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-const phoneRegex = /^\(?\d{2}\)?\s?\d{4,5}-\d{4}$/
+const phoneRegex = /^\(\d{2}\)\s?\d{4,5}-\d{4}$/
 let validContact = false;
 
 const search = document.getElementById('person-input');
@@ -19,6 +19,7 @@ CancelButton.addEventListener('click',()=>{
 });
 
 typeInput.addEventListener('change',()=>{
+    contactInput.value = '';
     if (typeInput.value === 'Phone'){
         contactInput.placeholder = '(XX) XXXXX-XXXX';
         contactInput.readOnly= false; 
@@ -60,34 +61,53 @@ contactInput.addEventListener('focus', () => {
     contactInput.style.border = '1px solid black';
 });
 
+contactInput.addEventListener('input',(e)=>{
+    if (typeInput.value === 'Phone'){
+        let value = e.target.value.replace(/\D/g, ""); 
 
-search.addEventListener('input',(element)=>{
+        if (value.length > 11) value = value.slice(0, 11);
+
+        let formatted = "";
+
+        if (value.length > 0) formatted += "(" + value.substring(0, 2);
+        if (value.length >= 3) formatted += ") " + value.substring(2, 7);
+        if (value.length >= 8) formatted += "-" + value.substring(7);
+
+        e.target.value = formatted;
+
+    }
+
+})
+
+search.addEventListener('input', (element) => {
     const query = element.target.value;
 
-    fetch('/scripts/apis/search.php?q=' + encodeURIComponent(query))
-    .then(response => response.json())
-    .then(data => {
-        const datalist = document.getElementById('person-datalist');
-        datalist.innerHTML = '';
-        if (data){
-            data.forEach(item=>{
-            const option = document.createElement('option');
-            search.dataset.id = item.id;
-            search.dataset.name = item.name;
-            search.dataset.cpf = item.cpf;
-            search.dataset.gender = item.gender;
-            option.value = ` ${item.name} - ${item.cpf}`;
-            datalist.appendChild(option);
-        })} 
-    })
+    fetch('/scripts/apis/search.php?class=Person&search=' + encodeURIComponent(query))
+        .then(data => { return data.json() })
+        .then(data => {
+            const datalist = document.getElementById('person-datalist');
+            datalist.innerHTML = '';
+
+            if (data.length > 0) {
+                data.forEach(item => {
+                    const option = document.createElement('option');
+                    search.dataset.id = item.id;
+                    search.dataset.name = item.name;
+                    search.dataset.cpf = item.cpf;
+                    search.dataset.gender = item.gender;
+                    option.value = ` ${item.name} - ${item.cpf}`;
+                    datalist.appendChild(option);
+                });
+            }
+        });
 });
 
 RegisterContact.addEventListener('click',(event)=>{
     event.preventDefault();
-    console.log(search.value);
+    console.log(contactInput.value);
     if (validType && validContact){
         fetch('/scripts/apis/registerContact.php',{
-            method: "POST",
+            method: 'POST',
             headers: {
                 'Content-Type':'application/json'
             },
@@ -97,10 +117,18 @@ RegisterContact.addEventListener('click',(event)=>{
                 person: search.value,
             })
         })
-        .then((data)=>{
-            return data.json()
-            //window.location.href= "../index";
+        .then(response=>{return response.json()})
+        .then(data=>{
+            if (data.sucess!=true){
+                alert(data.message);
+            }
+            else {
+                alert(data.message);
+                window.location.href= "/../index.php";
+            }
         })
-        .then(response=>console.log(response.message))
-    };
+        .catch(error=>{
+            console.log('Erro na requisição: ', error)
+        })
+    }
 })

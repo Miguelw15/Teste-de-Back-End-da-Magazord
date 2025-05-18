@@ -26,10 +26,30 @@ class PersonController
         }
         catch (Exception $e)
         {
-            echo 'Error: ' . $e->getMessage();
             return null;
         }
         
+    }
+    public function deletePerson($id): void 
+    {
+        try {
+            $person = $this->PersonRepository->findOneBy([
+                'id'=> $id,
+            ]);
+            $hasContact = $person->getContacts();
+            if (!$hasContact->isEmpty())
+            {
+                forEach ($hasContact as $contact){
+                    $contact->setPerson(null);
+                }
+            }
+
+            $this->entityManager->remove($person);
+            $this->entityManager->flush();
+        }
+        catch (Exception $e){
+            echo 'Error: '.$e;
+        }
     }
 
     public function getAllPersons(): array
@@ -53,15 +73,14 @@ class PersonController
                 'cpf'=> $cpf
             ]);
             
-            return $caughtPerson;
+            return $caughtPerson ? $caughtPerson : null;
         }
         catch(Exception $e)
         {
-            echo "Error: " . $e->getMessage();
             return null;
         }
     }
-    public function getPersons($name,) 
+    public function getPersons($name): array|null
     {
         $personArray = [];
 
@@ -70,41 +89,46 @@ class PersonController
         )->setParameter('name', '%' . $name . '%');
 
         $results = $query->getResult();
-
-       foreach ($results as $person) 
-       {
-            $contactsArray = [];
-            foreach ($person->getContacts() as $contact) 
+        if (!empty($results)){
+            foreach ($results as $person) 
             {
-                $contactsArray[] = [
-                    'id' => $contact->getId(),
-                    'type' => $contact->getType(),
-                    'content' => $contact->getContent()
-                ];
-            }
+                $contactsArray = [];
+                foreach ($person->getContacts() as $contact) 
+                {
+                    $contactsArray[] = [
+                        'id' => $contact->getId(),
+                        'type' => $contact->getType(),
+                        'contact' => $contact->getContact()
+                    ];
+                }
 
-            $personArray[] = 
-            [
-                'id' => $person->getId(),
-                'name' => $person->getName(),
-                'cpf' => $person->getCPF(),
-                'gender' => $person->getGender(),
-                'contacts' => $contactsArray 
-            ];
+                $personArray[] = 
+                [
+                    'id' => $person->getId(),
+                    'name' => $person->getName(),
+                    'cpf' => $person->getCPF(),
+                    'gender' => $person->getGender(),
+                    'contacts' => $contactsArray
+                ];
+                
+            }
             return $personArray; 
         }
+        else {
+            return null;
+        }
     }
-    public function hasPerson($name, $cpf): bool
+    public function hasPerson($name, $cpf): bool|null
     {   
         try {
-            $hasP = $this->PersonRepository->findOneBy([
+            $hasPerson = $this->PersonRepository->findOneBy([
                 'name' => $name,
                 'cpf' => $cpf,
             ]);
-            return true;
+            return $hasPerson? true: false;
         } catch (Exception $e) {
-            echo "Erro: " . $e->getMessage();
-            return false;
+            
+            return null;
         }
 
     }

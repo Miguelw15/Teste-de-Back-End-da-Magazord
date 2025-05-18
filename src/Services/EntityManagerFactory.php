@@ -7,12 +7,11 @@ use Dotenv\Dotenv as Dotenv;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\DBAL\DriverManager;
-
 class EntityManagerFactory
 {
     public static function create(): EntityManager
     {
-        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../','local.env');
+        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../', 'local.env');
         $dotenv->load();
         $isDevMode = true;
         $paths = [__DIR__."/../Entity"];
@@ -25,6 +24,7 @@ class EntityManagerFactory
         ];
 
         $config = ORMSetup::createAttributeMetadataConfiguration($paths,$isDevMode);
+        
         $conn = DriverManager::getConnection($dbParams,$config);
 
         return new EntityManager($conn,$config);

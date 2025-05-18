@@ -60,7 +60,7 @@ class Contact
     }
 
     public function getPerson(): ?Person
-    {
+    {  
         return $this->person;
     }
 

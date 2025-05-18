@@ -17,7 +17,7 @@ CancelButton.addEventListener('click', () => {
     window.location.href = '../index.html';
 });
 
-// ==== NAME VALIDATION ====
+// ==== NAME VALIDATION ==== //
 nameInput.addEventListener('blur', () => {
     const nameRegex = /^[a-zA-ZÀ-Öà-ö]{2,100}\s[a-zA-ZÀ-Öà-ö]{2,100}$/;
     if (!nameRegex.test(nameInput.value) && nameInput.value !== "") {
@@ -36,7 +36,7 @@ nameInput.addEventListener('focus', () => {
     nameInput.style.border = '1px solid black';
 });
 
-// ==== CPF VALIDATION ====
+// ==== CPF VALIDATION ==== //
 cpfInput.addEventListener('blur', () => {
     const cpfRegex = /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/; 
     if (!cpfRegex.test(cpfInput.value) && cpfInput.value !== "") {
@@ -55,6 +55,23 @@ cpfInput.addEventListener('focus', () => {
     cpfInput.style.border = '1px solid black';
 });
 
+cpfInput.addEventListener('input',(e)=>{
+    let value = e.target.value.replace(/\D/g, "");
+
+    if (value.length > 11) value = value.slice(0, 11); 
+
+    let formatted = '';
+
+    if (value.length > 0) formatted += value.substring(0, 3);
+    if (value.length > 3) formatted += '.' + value.substring(3, 6);
+    if (value.length > 6) formatted += '.' + value.substring(6, 9);
+    if (value.length > 9) formatted += '-' + value.substring(9, 11);
+
+    e.target.value = formatted;
+});
+
+
+// === GENDER VALIDATION === //
 genderInput.addEventListener('blur', () => {
     const genderRegex = /^(Male|Female|Other)$/i;
     if (!genderRegex.test(genderInput.value) && genderInput.value !== "") {
@@ -77,7 +94,7 @@ RegisterPerson.addEventListener('click',(event)=>{
     if (validCPF&&validGender&&validName){
         console.log(nameInput.value,cpfInput.value,genderInput.value)
         fetch('/scripts/apis/registerPerson.php',{
-            method: "POST",
+            method: 'POST',
             headers: {
                 'Content-Type':'application/json'
             },
@@ -89,8 +106,17 @@ RegisterPerson.addEventListener('click',(event)=>{
         })
         .then(response=>{return response.json()})
         .then(data=>{
-            console.log(data.message);
-            window.location.href= "/../index";
+            if (data.sucess!=true){
+                alert(data.message);
+            }
+            else {
+                alert(data.message);
+                window.location.href= "/../index.php";
+            }
+
+        })
+        .catch(error=>{
+            console.log('Erro na requisição: ', error)
         })
     }
 });

@@ -14,8 +14,19 @@ $PersonManager = new PersonController($entityManager);
 
 $newPerson = $PersonManager->createPerson($data['name'],$data['cpf'],$data['gender']);
 
-
-echo json_encode(['message'=>'sucesso menino, voa, que Deus seja louvado']);
+if ($newPerson){
+    echo json_encode([
+        'sucess'=>true,
+        'message'=>'Pessoa criada com sucesso.',
+        'id'=>$newPerson->getId(),
+    ]);
+}
+else {
+    echo json_encode([
+        'sucess'=>false,
+        'message'=> 'Pessoa já existe!',
+    ]);
+}
 
 
 
