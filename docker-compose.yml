@@ -1,0 +1,26 @@
+
+services:
+  db:
+    image: postgres:latest
+    container_name: postgres-container
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: postgres
+      POSTGRES_DB: meu_banco
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: php
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/usr/src/myapp
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
