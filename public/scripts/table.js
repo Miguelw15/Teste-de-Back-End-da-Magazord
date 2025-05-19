@@ -1,8 +1,11 @@
+import { AppState } from "./authentications.js";
+
 const personbody = document.querySelector('.person-table tbody');
 const contactbody = document.querySelector('.contact-table tbody');
 
 const addContact = document.getElementById('add-contact');
 const addPerson = document.getElementById('add-person');
+const personInput = document.getElementById('person-input');
 
 const searchContactsInput = document.getElementById('search-contacts-input');
 const searchContactsSubmit = document.getElementById('search-contacts-submit');
@@ -18,7 +21,35 @@ let maxRowsContact = document.getElementById('lines-contact');
 
 let contacts;
 let persons;
- 
+
+const registerOverlayPerson = document.getElementById('register-overlay-person');
+const registerOverlayContact = document.getElementById('register-overlay-contact');
+const nameLabel = document.getElementById('name-label');
+const nameInput = document.getElementById('name-input');
+const cpfInput = document.getElementById('cpf-input');
+const cpfLabel = document.getElementById('cpf-label');
+const genderInput = document.getElementById('gender-input');
+const typeInput = document.getElementById('type-input');
+const contactInput = document.getElementById('contact-input');
+const contactLabel = document.getElementById('contact-label');
+const search = document.getElementById('person-input');
+
+function restoreInputs(){
+    contactInput.style.border = '1px solid black';
+    contactLabel.innerHTML = 'Contact';
+    typeInput.value = '';
+    contactInput.value = '';
+    searchPersonsInput.value = '';
+    personInput.value = '';
+
+    nameLabel.value = 'Name';
+    nameInput.style.border = '1px solid black';
+    nameInput.value = '';
+    cpfInput.value = '';
+    cpfLabel.value = '';
+    genderInput.value = '';
+}
+
 
 function renderEditView()
 {
@@ -27,16 +58,39 @@ function renderEditView()
 
     editView.forEach(button=>{
         button.addEventListener('click',()=>{
-            data = button.closest('article').dataset;
-            window.location.href = `/templates/editView.html?class=${data.class}&id=${data.id}`
+            let data = button.closest('article').dataset;
+            AppState.isEditing = true;
+            AppState.isRegister = false;
+            AppState.registerType = data.class;
+            AppState.currentId = data.id;
+            restoreInputs();
+
+            if (data.class === 'Contact') {
+                contactInput.removeAttribute('readonly');
+                registerOverlayContact.querySelector('h1').innerHTML = 'Edit Contact'
+                registerOverlayContact.style.display = 'flex';
+                typeInput.value = data.type;
+                contactInput.value = data.contact;
+
+                if (data.person !== 'null') {
+                    search.value = data.person;
+                }
+            }
+            else if (data.class === 'Person'){
+                registerOverlayPerson.querySelector('h1').innerHTML = 'Edit Person'
+                registerOverlayPerson.style.display = 'flex';
+                nameInput.value = data.name;
+                cpfInput.value = data.cpf;
+                genderInput.value = data.gender;
+            }
         })
     })
 
     remove.forEach(button=>{
         button.addEventListener('click',()=>{
-            data = button.closest('article').dataset;
-            data.id = button.closest('article').dataset.id;
-            data.class = button.closest('article').dataset.class;
+            let data = button.closest('article').dataset;
+            deleteConfirmOverlay.dataset.id = data.id;
+            deleteConfirmOverlay.dataset.class = data.class;
             deleteConfirmOverlay.style.display = 'flex';
         })
     })
@@ -56,10 +110,10 @@ function createContactColumns(){
                 <td>${data.id}</td>
                 <td>${data.type}</td>
                 <td>${data.contact}</td>
-                <td>${data.person? `[${data.person.id}] ${data.person.name}` : 'NULL'}
+                <td>${data.person? `[${data.person.id}] ${data.person.name}` :null}
                 <td>
                 <article data-id="${data.id}" data-type="${data.type}"
-                data-class="Contact" data-contact="${data.contact}" class="edit-delete">
+                data-class="Contact" data-contact="${data.contact}" data-person="${data.person? `${data.person.name} - ${data.person.cpf}`: null }" class="edit-delete">
                     <img class="edit edit-button" src="assets/Edit.svg"></img>
                     <img class="delete edit-button" src="assets/Delete.svg"></img>
                 </article>
@@ -95,7 +149,8 @@ function createPersonColumns(){
                 <td>${data.gender}</td>
                 <td>
                 <article class="edit-delete" 
-                data-class="Person" data-id="${data.id}" data-name="${data.name}" data-cpf=${data.cpf}>
+                data-class="Person" data-id="${data.id}" data-name="${data.name}" data-cpf=${data.cpf}
+                data-gender="${data.gender}">
                 <img class="edit edit-button" src="assets/Edit.svg"></img>
                 <img class="delete edit-button" src="assets/Delete.svg"></img>
                 </article>
@@ -112,6 +167,7 @@ function createPersonColumns(){
         lastColor = lastColor === 'gray' ? 'white' : 'gray';
         personbody.appendChild(row);
     }
+
     renderEditView();
 };
 
@@ -171,8 +227,12 @@ confirmDelete.addEventListener('click',()=>{
     })
     .then(response=>{return response.json()})
     .then(data=>{
-        console.log(data.message);
-        location.reload();
+        if (data.success){
+            location.reload();
+        }
+        else {
+            alert(data.message)
+        }
     })
     .catch(error=>{
         console.log(`Unable to delete the data, error: ${error}`);
@@ -189,10 +249,19 @@ maxRowsPerson.addEventListener('change',()=>{
 });
 
 addContact.addEventListener('click',()=>{
-    window.location.href = "../templates/registerContact.html";
+    restoreInputs();
+    AppState.isRegister = true;
+    AppState.isEditing = false;
+    registerOverlayContact.querySelector('h1').innerHTML = 'Register Contact';
+    registerOverlayContact.style.display = 'flex';
 });
+
 addPerson.addEventListener('click',()=>{
-    window.location.href = "../templates/registerPerson.html";
+    restoreInputs();
+    AppState.isRegister = true;
+    AppState.isEditing = false;
+    registerOverlayPerson.querySelector('h1').innerHTML = 'Register Person';
+    registerOverlayPerson.style.display = 'flex';
 });
 
 fetch('/scripts/apis/get.php')

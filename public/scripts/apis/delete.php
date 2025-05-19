@@ -25,8 +25,8 @@ elseif ($class==='Person' && $id) {
     $PersonManager->deletePerson($id);
 }
 else {
-    echo json_encode(['message'=>'Error']);
+    echo json_encode(['message'=>'Error','success'=>false]);
     exit();
 }
-echo json_encode(value: ['message'=>'Sucess']);
+echo json_encode(value: ['message'=>'Data deleted successfully','success'=>true]);
 

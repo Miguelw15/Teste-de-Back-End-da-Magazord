@@ -12,21 +12,32 @@ $data = json_decode($rawData,true);
 
 $PersonManager = new PersonController($entityManager);
 
-$newPerson = $PersonManager->createPerson($data['name'],$data['cpf'],$data['gender']);
+$cpfExists = $PersonManager->getPerson(null,null,$data['cpf']); 
 
-if ($newPerson){
-    echo json_encode([
-        'sucess'=>true,
-        'message'=>'Pessoa criada com sucesso.',
-        'id'=>$newPerson->getId(),
-    ]);
+if ($data['name']===''){
+    echo json_encode(['success'=>false,'message'=>'Nome inválido.',]);
+    exit();
 }
-else {
-    echo json_encode([
-        'sucess'=>false,
-        'message'=> 'Pessoa já existe!',
-    ]);
+
+if (!$cpfExists && $data['cpf']!==''){
+    if ($data['gender']!==''){
+        $newPerson = $PersonManager->createPerson($data['name'],$data['cpf'],$data['gender']);
+        echo json_encode(['success'=>true,'message'=>'Pessoa criada com sucesso.',]);
+        exit();
+    } 
+    else {
+        echo json_encode(value: ['success'=>false,'message'=>'Selecione um gênero.',]);
+        exit();
+    }
 }
+if ($data['cpf']===''){
+    echo json_encode(['success'=>false,'message'=>'Insira um CPF válido.',]);
+    exit();
+}
+
+
+    
+
 
 
 

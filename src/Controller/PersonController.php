@@ -48,7 +48,7 @@ class PersonController
             $this->entityManager->flush();
         }
         catch (Exception $e){
-            echo 'Error: '.$e;
+            echo "Error: ". $e;
         }
     }
 
@@ -66,17 +66,21 @@ class PersonController
         };
         return $personArray;    
     }
-    public function getPerson($name,$cpf): ?Person
+    public function getPerson($id,$name,$cpf): ?Person
     {
         try {
-            $caughtPerson = $this->PersonRepository->findOneBy([
-                'cpf'=> $cpf
-            ]);
+            $criteria = [];
+            if ($id!==null) $criteria['id'] = $id;
+            if ($name!==null) $criteria['name'] = $name;
+            if ($cpf!==null) $criteria['cpf'] = $cpf;
+
+            $caughtPerson = $this->PersonRepository->findOneBy($criteria);
             
             return $caughtPerson ? $caughtPerson : null;
         }
         catch(Exception $e)
         {
+            echo "Error: ". $e;
             return null;
         }
     }
@@ -118,17 +122,20 @@ class PersonController
             return null;
         }
     }
-    public function hasPerson($name, $cpf): bool|null
+    public function hasPerson($id,$name,$cpf,): bool
     {   
         try {
-            $hasPerson = $this->PersonRepository->findOneBy([
-                'name' => $name,
-                'cpf' => $cpf,
-            ]);
-            return $hasPerson? true: false;
-        } catch (Exception $e) {
+            $criteria = [];
+            if ($id!==null) $criteria['id'] = $id;
+            if ($name!== null) $criteria['name'] = $name;
+            if ($cpf!== null) $criteria['cpf'] = $cpf;
             
-            return null;
+            $hasPerson = $this->PersonRepository->findOneBy($criteria);
+            return $hasPerson? true: false;
+        } 
+        catch (Exception $e) {
+            echo "Error: ". $e;
+            return false;
         }
 
     }

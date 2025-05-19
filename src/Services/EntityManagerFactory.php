@@ -11,7 +11,7 @@ class EntityManagerFactory
 {
     public static function create(): EntityManager
     {
-        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../', 'local.env');
+        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../', '.env');
         $dotenv->load();
         $isDevMode = true;
         $paths = [__DIR__."/../Entity"];
@@ -19,6 +19,8 @@ class EntityManagerFactory
         $dbParams = [
             'driver'    =>  $_ENV['DB_DRIVER'],
             'user'      =>  $_ENV['DB_USER'],
+            'host'      =>  $_ENV['DB_HOST'],
+            'DB_PORT'   =>  $_ENV['DB_PORT']??5432,
             'password'  =>  $_ENV['DB_PASSWORD'],
             'dbname'    =>  $_ENV['DB_NAME'],
         ];

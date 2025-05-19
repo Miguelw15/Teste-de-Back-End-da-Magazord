@@ -22,16 +22,11 @@ $matches = [];
 if (preg_match('/^(.*?)\s*-\s*(\d{3}\.\d{3}\.\d{3}-\d{2})$/', $data['person'], $matches)) {
     $name = trim($matches[1]);
     $cpf = str_replace(' ', '', $matches[2]);
-} else {
-    if ($data['person'] != null) {
-        echo json_encode(['message' => 'Faltando dados em Person ou dado inválido!']);
-        exit();
-    } 
 }
 
 
-$hasPerson = $PersonManager->hasPerson($name, $cpf);
-$hasContact = $ContactManager->hasContact($data['type'],$data['contact']);
+$hasPerson = $PersonManager->hasPerson(null,$name, $cpf);
+$hasContact = $ContactManager->hasContact(null,$data['type'],$data['contact']);
 
 if (!$hasContact){
     
@@ -39,16 +34,21 @@ if (!$hasContact){
     
     if($hasPerson && $data['person']!=null)
     {
-        $person = $PersonManager->getPerson($name,$cpf);
+        $person = $PersonManager->getPerson(null,$name,$cpf);
         $person->addContact($newContact);
         $newContact->setPerson($person);
     }
-        
+    elseif (!$hasPerson && $data['person']!=null)
+    {
+        echo json_encode(['message' => 'Faltando dados em Person ou dado inválido!']);
+        exit();
+    }
+
     $entityManager->persist($newContact);
     $entityManager->flush();
-    echo json_encode(['message'=>'Contato registrado com sucesso!','sucess'=>true]);
+    echo json_encode(['message'=>'Contato registrado com sucesso!','success'=>true]);
 }
 else {
-    echo json_encode(['message'=>'Contato já existente, tente outro!','sucess'=>false]);
+    echo json_encode(['message'=>'Contato já existente, tente outro!','success'=>false]);
 }
 

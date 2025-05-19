@@ -1,8 +1,4 @@
-html, *{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-}
+
 body {
     flex-direction: column;
     align-items: start;
@@ -39,6 +35,7 @@ th{
 }
 
 table {
+    
     border-collapse: collapse;
     width: 650px;
     justify-content: center;
@@ -50,15 +47,6 @@ img{
     height: 40px;
 }
 
-.edit-button{
-    transition: .2s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-.edit-button:hover{
-    scale: .9;
-}
 
 .left-content{
     display: flex;
@@ -86,51 +74,6 @@ img{
     gap: 5px;
 }
 
-.edit-delete{
-    gap: 15px;
-    display: flex;
-}
-.edit-delete img {
-    width: 30px;
-    height: 30px;
-}
-
-#delete-confirm-overlay {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    top: 0;
-    bottom: 0;
-    width: 100vw;
-    height: 100vh;
-    position: fixed;
-    background-color: rgba(0, 0, 0, 0.199);
-    z-index: 100;
-}
-
-#delete-confirm-modal {
-    text-align: center;
-    padding: 30px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: baseline;
-    border: 1px solid black;
-    width: 350px;
-    height: 200px;
-    background-color: white;
-    gap: 30px;
-}
-
-.confirm-cancel-button-container {
-    display: flex;
-    gap: 30px;
-}
-
-.confirm-cancel-button{
-    width: 60px;
-    height: 30px;
-}
 
 .person-id-column{width: 50px;}
 .person-gender-column{width: 80px;}

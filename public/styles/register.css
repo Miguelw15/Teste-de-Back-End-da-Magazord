@@ -1,20 +1,70 @@
-html, *{
-    padding: 0;
-    margin: 0;
-}
 
-body {
+
+#register-overlay-person {
     width: 100vw;
     height: 100vh;
-    display: flex;
-    flex-direction: column;
+    background-color: rgba(136, 130, 130, 0.192);
+    display: none;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    position: fixed;
+    align-items: center;
+    justify-content: center;
+}
+#register-overlay-contact {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(136, 130, 130, 0.192);
+    display: none;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+
+#delete-confirm-overlay {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(136, 130, 130, 0.192);
+    display: none;
     justify-content: center;
     align-items: center;
+    top: 0;
+    left: 0;
+    z-index: 9999;
 }
+#delete-confirm-modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 30px;
+    height: 250x;
+    width: 200px;
+    background-color: white;
+    text-align: center;
+}
+.confirm-cancel-button-container{
+    display: flex;
+    gap: 15px;
+}
+.confirm-cancel-button-container input {
+    display: flex;
+    gap: 15px;
+    width: 60px;
+    height: 30px;
+    text-align: center;
+}
+
+
 
 .register-container {
     padding: 30px;
-    background-color: rgba(136, 130, 130, 0.192);
+    background-color: white;
     display: flex;
     flex-direction: column;
     height: auto;
@@ -57,4 +107,24 @@ body {
     height: 30px;
     border: 1px solid black;
     border-style: inset;
+}
+
+
+
+.edit-delete{
+    gap: 15px;
+    display: flex;
+}
+.edit-delete img {
+    width: 30px;
+    height: 30px;
+}
+.edit-button{
+    transition: .2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.edit-button:hover{
+    scale: .9;
 }

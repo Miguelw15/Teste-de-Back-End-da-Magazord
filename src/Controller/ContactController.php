@@ -38,13 +38,30 @@ class ContactController
         return $contactsArray;
         
     }
-    
-    public function getContacts($search): array|null 
+    public function getContact($id,$type,$contact): ?Contact
+    {
+        try { 
+            $criteria = [];
+            if ($id !== null) $criteria['id'] = $id;
+            if ($type !== null) $criteria['type'] = $type;
+            if ($contact !== null) $criteria['contact'] = $contact;
+
+            $contact = $this->ContactsRepository->findOneBy($criteria);
+            return $contact ? $contact : null;
+        }
+        catch (Exception $e)
+        {  
+            echo 'Error: '. $e;
+           return null;
+        }
+    }
+
+    public function getContacts($contact): array|null 
     {   
         $contactsArray = [];
         $query = $this->entityManager->createQuery(
             'SELECT c FROM App\Entity\Contact c WHERE LOWER(c.contact) LIKE LOWER(:contact)'        
-            )->setParameter('contact','%'.$search.'%');
+            )->setParameter('contact','%'.$contact.'%');
 
         $results = $query->getResult();
         if (!empty($results)) {
@@ -78,32 +95,35 @@ class ContactController
             return null;
         }
     }
-    public function hasContact($type,$contact):bool|null
+    public function hasContact($id=null,$type=null,$contact=null):bool|null
     {
         try {
             
-            $hasContact = $this->ContactsRepository->findOneBy([
-                'type'=>$type,
-                'contact'=>$contact,
-            ]);
+            $criteria = [];
+            if ($id !== null) $criteria['id'] = $id;
+            if ($type !== null) $criteria['type'] = $type;
+            if ($contact !== null) $criteria['contact'] = $contact;
+
+            $hasContact = $this->ContactsRepository->findOneBy($criteria);
             return $hasContact ? true : false;
         }
-        catch (Exception $e)
-        {
-           
+        catch (Exception $e) {
             return null;
         }
     }
-    public function deleteContact($id){
+    public function deleteContact($id=null,$type=null,$contact=null){
         try {
-            $contact = $this->ContactsRepository->findOneBy([
-                'id' => $id,
-            ]);
-            $this->entityManager->remove($contact);
+            $criteria = [];
+            if ($id !== null) $criteria['id'] = $id;
+            if ($type !== null) $criteria['type'] = $type;
+            if ($contact !== null) $criteria['contact'] = $contact;
+
+            $Contact = $this->ContactsRepository->findOneBy($criteria);
+            $this->entityManager->remove($Contact);
             $this->entityManager->flush();
         }
         catch (Exception $e){
-            echo 'Error: '. $e;
+            return null;
         }
     }
 }

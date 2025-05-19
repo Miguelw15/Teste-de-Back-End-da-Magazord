@@ -36,8 +36,8 @@ class Contact
         }
     }
 
-    private function authenticate($type,$contact)
-    {  
+    private function authenticate($type,$contact): bool
+    {   
         if ($type === 'Email'){
             if(!filter_var($contact,FILTER_VALIDATE_EMAIL)){
                 throw new Exception('Invalid email! ');
@@ -73,10 +73,27 @@ class Contact
         return $this->type;
     }
     
+    public function setContact($type,$contact): void  
+    {
+        try {
+            $isValid = $this->authenticate($type,$contact);
+            if ($isValid){
+                $this->type = $type;
+                $this->contact = $contact;
+            }
+        }
+        catch (Exception $e)
+        {
+            echo "Error: ". $e;
+        }
+
+    }
+    
     public function getContact(): string
     {
         return $this->contact;
     }
     
+   
 
 }

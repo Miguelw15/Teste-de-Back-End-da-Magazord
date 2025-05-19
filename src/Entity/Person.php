@@ -86,9 +86,33 @@ class Person
         return $this->name;
     }
     
+    public function setName($name): void
+    {
+        try {
+            $isValid = $this->authenticate($name,$this->cpf,$this->gender);
+            if ($isValid) $this->name = $name;
+        }
+        catch (Exception $e)
+        {
+            echo "Error: ". $e;
+        }
+    }
+
     public function getCPF(): string
     {
         return $this->cpf;
+    }
+
+    public function setCPF($cpf): void
+    {
+        try {
+            $isValid = $this->authenticate($this->name,$cpf,$this->gender);
+            if ($isValid) $this->cpf = $cpf;
+        }
+        catch (Exception $e)
+        {
+            echo "Error: ". $e;
+        }
     }
     public function getContacts(): array|Collection
     {
@@ -97,5 +121,17 @@ class Person
     public function getGender(): string
     {
         return $this->gender;
+    }
+
+    public function setGender($gender): void
+    {
+        try {
+            $isValid = $this->authenticate($this->name,$this->cpf,$gender);
+            if ($isValid) $this->gender = $gender;
+        }
+        catch (Exception $e)
+        {
+            echo "Error: ". $e;
+        }
     }
 }
